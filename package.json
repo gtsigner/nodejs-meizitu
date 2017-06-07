@@ -1,0 +1,19 @@
+{
+  "name": "nodespider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.1",
+    "download": "^6.2.2",
+    "log4js": "^1.1.1",
+    "redis": "^2.7.1",
+    "request": "^2.81.0",
+    "restify-clients": "^1.5.0"
+  }
+}
