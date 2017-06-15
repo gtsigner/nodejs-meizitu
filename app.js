@@ -1,6 +1,7 @@
 /**
  * @Author:zhaojunlike
  * @Github:https://github.com/zhaojunlike
+ * @Do： 采集某网站整站图集
  * Created by zhaojunlike on 6/4/2017.
  */
 const http = require("http");
@@ -13,8 +14,8 @@ const redis = require("redis");
 const process = require("process");
 const download = require('download');
 const redisConn = redis.createClient({
-    //host: "redis-db",
-    host: "192.168.99.100",
+    //host: "192.168.99.100",
+    host: "redis-db",
     port: "6379",
 });
 const url = require('url');
@@ -23,13 +24,14 @@ const path = require('path');
 const RequestHeaders = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3047.4 Safari/537.36",
     "Host": "www.mzitu.com",
+    'token': '4F39500149264DE474AA8FA4C67379D1',
 };
 const webClient = restify.createStringClient({
     url: 'http://www.mzitu.com',
     headers: RequestHeaders
 });
 const serverApiClient = restify.createStringClient({
-    url: 'http://192.168.99.1:8080',
+    url: 'http://mvn:8080',
     //url: 'http://192.168.99.100:81',
     headers: RequestHeaders
 });
@@ -54,6 +56,11 @@ const RemoteConfig = {
 const ServerApi = {
     DocumentAdd: "/Document_add.action",
     PictureAdd: "/Picture_add.action",
+    //获取上一次的采集对象,这个作为增量采集的标识
+    DocumentLast: "/Document_last.action",
+    //验证图集是否被采集过了
+    DocumentCheck: "/Document_check.action"
+
 };
 let SpiderIDLE = {
     start: false,
@@ -96,6 +103,7 @@ const Tools = {
     }
 };
 
+//全站采集器
 const Spider = {
     start: function () {
         webClient.get('/zhuanti/', function (err, req, res, data) {
@@ -260,6 +268,13 @@ const Spider = {
     },
 };
 
+//增量采集器
+const IncSpider = {
+    run: function (callback) {
+
+    }
+};
+
 //Spider.clearRedis();
 const SpiderTimer = setInterval(function () {
     if (SpiderIDLE.start !== true) {
@@ -300,7 +315,6 @@ Spider.getPageList(function (count) {
     console.log(`一共有:${count}个页面需要采集`);
     SpiderIDLE.start = true;
 });
-
 
 
 process.on("exit", function () {
