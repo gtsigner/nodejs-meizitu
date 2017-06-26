@@ -6,6 +6,8 @@
 
 ### Usage
 
+如果需要本地使用，请切换到autoversion版本分支
+
 安装依赖包
 ```$xslt
 npm install

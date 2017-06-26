@@ -14,24 +14,27 @@ const redis = require("redis");
 const process = require("process");
 const download = require('download');
 const redisConn = redis.createClient({
-    //host: "192.168.99.100",
-    host: "redis-db",
+    host: "192.168.99.100",
+    // host: "redis-db",
     port: "6379",
 });
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
+//请求头，token是我服务端需要的而已
 const RequestHeaders = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3047.4 Safari/537.36",
     "Host": "www.mzitu.com",
     'token': '4F39500149264DE474AA8FA4C67379D1',
 };
+//网站来源
 const webClient = restify.createStringClient({
     url: 'http://www.mzitu.com',
     headers: RequestHeaders
 });
+//服务端api配置
 const serverApiClient = restify.createStringClient({
-    url: 'http://mvn:8080',
+    url: 'http://localhost:8080',
     //url: 'http://192.168.99.100:81',
     headers: RequestHeaders
 });
@@ -69,7 +72,7 @@ let SpiderIDLE = {
     img_down_success: false,
     img_taotu_success: false,
     //BASE_PATH: "../storage/download",
-    BASE_PATH: "../storage"
+    BASE_PATH: "./download"
 };
 
 const Tools = {
@@ -293,18 +296,14 @@ const SpiderTimer = setInterval(function () {
             //2.提交给服务器,这个只是页面的
             document.content = "/banner" + fileDetail.filepath + "/" + fileDetail.filename;
             document.view_count = parseInt(document.view_count);
-            serverApiClient.post(ServerApi.DocumentAdd, document, function (err, req, res, data) {
-                console.log(`图片Document:${document.category_id},写入服务器成功`);
-            });
+            //TODO 服务端
         });
     }
     Spider.downloadYY(function (picture) {
-        serverApiClient.post(ServerApi.PictureAdd, picture, function (err, req, res, data) {
-            console.log(`真实Picture:${picture.remote_id},存储服务器成功`);
-        });
+        //TODO 服务端
     });
     Spider.getTaoTuImgs(function (document) {
-
+        //TODO 服务端
     });
 }, 100);
 
