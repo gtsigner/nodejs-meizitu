@@ -268,14 +268,13 @@ const Spider = {
     },
 };
 
-//增量采集器
+//增量采集器 TODO version2.0
 const IncSpider = {
     run: function (callback) {
 
     }
 };
 
-//Spider.clearRedis();
 const SpiderTimer = setInterval(function () {
     if (SpiderIDLE.start !== true) {
         return false;
@@ -297,7 +296,6 @@ const SpiderTimer = setInterval(function () {
             serverApiClient.post(ServerApi.DocumentAdd, document, function (err, req, res, data) {
                 console.log(`图片Document:${document.category_id},写入服务器成功`);
             });
-
         });
     }
     Spider.downloadYY(function (picture) {
@@ -310,16 +308,15 @@ const SpiderTimer = setInterval(function () {
     });
 }, 100);
 
-
 Spider.getPageList(function (count) {
     console.log(`一共有:${count}个页面需要采集`);
     SpiderIDLE.start = true;
 });
 
 
+//pm2 exit
 process.on("exit", function () {
+    Spider.clearRedis();
     redisConn.end(true);
     clearInterval(SpiderTimer);
-    Spider.clearRedis();
-    console.log("exit");
 });
